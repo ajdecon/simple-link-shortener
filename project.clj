@@ -7,9 +7,17 @@
                  [ring/ring-defaults "0.2.1"]
                  [ring/ring-json "0.4.0"]
                  [org.clojure/java.jdbc "0.7.6"]
-                 [org.xerial/sqlite-jdbc "3.21.0"]]
-  :plugins [[lein-ring "0.9.7"]]
+                 [org.xerial/sqlite-jdbc "3.21.0"]
+                 [migratus "1.0.6"]]
+  :plugins [[lein-ring "0.9.7"]
+            [migratus-lein "0.5.7"]]
   :ring {:handler simple-link-shortener.handler/app}
   :profiles
   {:dev {:dependencies [[javax.servlet/servlet-api "2.5"]
-                        [ring/ring-mock "0.3.0"]]}})
+                        [ring/ring-mock "0.3.0"]]}}
+  :migratus {:store :database
+             :migration-dir "migrations"
+             :db {:classname "org.sqlite.JDBC"
+                  :subprotocol "sqlite"
+                  :subname "db/urls.sqlite3"}}
+)
