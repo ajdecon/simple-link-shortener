@@ -4,34 +4,59 @@
             [ring.middleware.defaults :refer [wrap-defaults api-defaults]]
             [ring.util.response :as response]
             [ring.middleware.json :as middleware]
-            [clojure.java.jdbc :refer :all :as jdbc]))
+            [clojure.java.jdbc :as jdbc]))
 
 ; Local SQLite database
 (def db
   {:classname "org.sqlite.JDBC"
    :subprotocol "sqlite"
-   :subname "db/urls.db"})
-
-; Make a generic error response
-(defn make-error [text]
-  (response/content-type
-    (response/status
-      (response/response {:error text})
-      301)
-    "application/json"
-  ))
+   :subname "db/urls.sqlite3"})
 
 ; Make a generic response
 (defn make-response [text]
-  (response/content-type (response/response {:text text}) "application/json"))
+  (response/content-type (response/response {:result text}) "application/json"))
 
-;(defn get-all-urls [] (make-error "not implementend"))
-(defn get-all-urls [] (make-response db))
+; Make a generic error response
+(defn make-error [text]
+    (response/status
+      (make-response text)
+      301)
+  )
 
-(defn add-url [request] (make-error "not implemented"))
+; Redirect to url from id
+(defn get-url-from-id [id]
+  (get
+    (first
+      (jdbc/query db ["select dest from urls where src = ?" id]))
+    :dest))
 
-(defn redirect-to [id] (make-error "not implemented"))
+(defn make-redirect-response [id]
+  (response/redirect (get-url-from-id id)))
 
+(defn redirect-to [id] 
+  (make-redirect-response id))
+
+; List all redirections available
+(defn get-all-urls []
+  (make-response (jdbc/query db ["select * from urls"])))
+
+; Add a new redirection with a random id
+(defn random-id [] (apply str (take 8 (repeatedly #(char (+ (rand 26) 97))))))
+
+(defn add-url-to-db [id url]
+  (jdbc/insert! db :urls
+      {:src id :dest url}))
+
+(defn url-from-request [request]
+  (get (get request :params) :url))
+
+(defn add-url [request]
+  (let [id (random-id)]
+    (let [url (url-from-request request)]
+      (add-url-to-db id url)
+      (make-response id))))
+
+; No implementation yet to remove a redirect
 (defn remove-url [id] (make-error "not implemented"))
 
 ; Application routes
@@ -50,5 +75,5 @@
   (->
     (wrap-defaults app-routes api-defaults)
     ; JSON-ify bodies and responses
-    (middleware/wrap-json-body)
+    (middleware/wrap-json-params)
     (middleware/wrap-json-response)))
