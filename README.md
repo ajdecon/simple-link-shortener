@@ -18,6 +18,14 @@ To start a web server for the application, run:
 
     lein ring server
 
+To create a new shortened link, POST a request to the `/urls` endpoint:
+
+    $ curl -H "Content-Type: application/json" -X POST -d '{"url":"http://www.google.com"}' http://localhost:3000/urls/
+    {"result":"tkgbedts"}
+
+The result is the id for the short link. So you can then go to `http://localhost:3000/urls/<id>`
+to go to the destination link.
+
 ## License
 
 Copyright © 2018 Adam DeConinck.
