@@ -1,6 +1,6 @@
-(defproject simple-link-shortener "0.1.0-SNAPSHOT"
-  :description "FIXME: write description"
-  :url "http://example.com/FIXME"
+(defproject simple-link-shortener "0.1.0"
+  :description "A really simple link shortener in Clojure"
+  :url "https://www.ajdecon.org"
   :min-lein-version "2.0.0"
   :dependencies [[org.clojure/clojure "1.8.0"]
                  [compojure "1.5.1"]
@@ -19,5 +19,4 @@
              :migration-dir "migrations"
              :db {:classname "org.sqlite.JDBC"
                   :subprotocol "sqlite"
-                  :subname "db/urls.sqlite3"}}
-)
+                  :subname "db/urls.sqlite3"}})
