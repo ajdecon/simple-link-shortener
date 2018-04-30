@@ -56,9 +56,6 @@
       (add-url-to-db id url)
       (make-response id))))
 
-; No implementation yet to remove a redirect
-(defn remove-url [id] (make-error "not implemented"))
-
 ; Application routes
 (defroutes app-routes
   (context "/urls" []
@@ -66,8 +63,7 @@
       (GET "/" [] (get-all-urls))
       (POST "/" request (add-url request))
       (context "/:id" [id]
-        (GET "/" [] (redirect-to id))
-        (DELETE "/" [] (remove-url id)))))
+        (GET "/" [] (redirect-to id)))))
   (route/not-found "Not Found"))
 
 ; Define the app to actually run!
