@@ -42,18 +42,27 @@
 ; Add a new redirection with a random id
 (defn random-id [] (apply str (take 8 (repeatedly #(char (+ (rand 26) 97))))))
 
+(defn id-from-url [url]
+  (get
+    (first
+      (jdbc/query db ["select src from urls where dest = ?" url]))
+    :src))
+
 (defn add-url-to-db [id url]
   (jdbc/insert! db :urls
       {:src id :dest url}))
 
 (defn url-from-request [request]
-  (get (get request :params) :url))
+  (get-in request [:params :url]))
 
 (defn add-url [request]
-  (let [id (random-id)]
-    (let [url (url-from-request request)]
-      (add-url-to-db id url)
-      (make-response id))))
+  (let [url (url-from-request request)]
+    (let [existing-id (id-from-url url)]
+      (if existing-id
+        (make-response existing-id)
+        (let [new-id (random-id)]
+          (add-url-to-db new-id url)
+          (make-response new-id))))))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
