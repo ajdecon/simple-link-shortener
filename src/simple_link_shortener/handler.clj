@@ -23,6 +23,8 @@
       301)
   )
 
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
 ; Redirect to url from id
 (defn get-url-from-id [id]
   (get
@@ -36,9 +38,13 @@
 (defn redirect-to [id] 
   (make-redirect-response id))
 
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
 ; List all redirections available
 (defn get-all-urls []
   (make-response (jdbc/query db ["select * from urls"])))
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 ; Add a new redirection with a random id
 (defn random-id [] (apply str (take 8 (repeatedly #(char (+ (rand 26) 97))))))
@@ -56,6 +62,8 @@
       (add-url-to-db id url)
       (make-response id))))
 
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
 ; Application routes
 (defroutes app-routes
   (context "/urls" []
@@ -65,6 +73,8 @@
       (context "/:id" [id]
         (GET "/" [] (redirect-to id)))))
   (route/not-found "Not Found"))
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 ; Define the app to actually run!
 (def app

@@ -2,6 +2,10 @@
 
 A really, really simple link shortener in Clojure.
 
+NOTE: You should absolutely not use this in
+production, as it has no concept of authentication, no rate limiting,
+uses an SQLite DB... Basically, it's a toy program. :-)
+
 ## Prerequisites
 
 You will need [Leiningen][] 2.0.0 or above installed.
