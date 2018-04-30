@@ -12,16 +12,9 @@
    :subprotocol "sqlite"
    :subname "db/urls.sqlite3"})
 
-; Make a generic response
+; Make a generic response of type JSON
 (defn make-response [text]
   (response/content-type (response/response {:result text}) "application/json"))
-
-; Make a generic error response
-(defn make-error [text]
-    (response/status
-      (make-response text)
-      301)
-  )
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
