@@ -68,12 +68,10 @@
 
 ; Application routes
 (defroutes app-routes
-  (context "/urls" []
-    (defroutes urls-routes
-      (GET "/" [] (get-all-urls))
-      (POST "/" request (add-url request))
-      (context "/:id" [id]
-        (GET "/" [] (redirect-to id)))))
+  (GET "/" [] (get-all-urls))
+  (POST "/" request (add-url request))
+  (context "/:id" [id]
+    (GET "/" [] (redirect-to id)))
   (route/not-found "Not Found"))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
