@@ -14,6 +14,10 @@ You will need [Leiningen][] 2.0.0 or above installed.
 
 ## Running
 
+To set up the SQLite DB, run:
+
+    lein migratus migrate
+
 To start a web server for the application, run:
 
     lein ring server
